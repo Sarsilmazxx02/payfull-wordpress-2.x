@@ -172,7 +172,7 @@ class PayfullService {
             $l = mb_strlen($value);
             $message .= $l . $value;
         }
-        $hash = hash_hmac('sha1', $message, $this->password);
+        $hash = hash_hmac('sha256', $message, $this->password);
         
         return $hash;
     }
