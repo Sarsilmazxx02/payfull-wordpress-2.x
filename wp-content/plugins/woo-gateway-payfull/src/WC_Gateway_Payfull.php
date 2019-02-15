@@ -495,22 +495,18 @@ class WC_Gateway_Payfull extends WC_Payment_Gateway {
         wp_redirect($redirect_url);
     }
 
-    protected function generateHash($params) {
-        $arr = [];
-        unset($params['hash']);
+    protected function generateHash($data) {
+        unset($data['hash']);
 
-        foreach($params as $param_key=>$param_val){$arr[strtolower($param_key)]=$param_val;}
-        ksort($arr);
-        $hashString_char_count = "";
-
-        foreach ($arr as $key=>$val) {
-            $l =  mb_strlen($val);
-            $hashString_char_count .= $l . $val;
+        $message = '';
+        ksort($data);
+        foreach($data as $key=>$value) {
+            $l = mb_strlen($value);
+            $message .= $l . $value;
         }
-
-        $hashString_char_count      = strtolower(hash_hmac("sha1", $hashString_char_count, $this->password));
-
-        return $hashString_char_count;
+        $hash = hash_hmac('sha256', $message, $this->password);
+        
+        return $hash;
     }
 
     protected function processPaymentResponse($order, $response) {
