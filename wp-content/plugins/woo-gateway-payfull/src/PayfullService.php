@@ -167,13 +167,13 @@ class PayfullService {
     
     private function hash($data) {
         $message = '';
-        ksort($data);
-        foreach($data as $key=>$value) {
-            $l = mb_strlen($value);
-            $message .= $l . $value;
+        $arr=[];
+        foreach($data as $param_key=>$param_val){$arr[strtolower($param_key)]=$param_val;}
+        ksort($arr);
+        foreach($arr as $key=>$value) {
+            $message .= mb_strlen((string)$value) . $value;
         }
-        $hash = hash_hmac('sha256', $message, $this->password);
-        
+        $hash = strtolower(hash_hmac('sha256',  $message, $this->password));
         return $hash;
     }
     
